@@ -13,18 +13,23 @@ const userList = {};
 
 io.on("connection", (socket)=>{
     //클라이언트가 registerName 이벤트 보내면 호출되는 이벤트 핸들러
-    socket.on("resgisterName", (userName)=>{
+    socket.on("registerName", (userName)=>{
+        console.log(1);
+        console.log(userName);
         // 클라이언트가 보낸 이름을 소켓 객체에 저장하고, list에 연결하여 저장
         socket.userName = userName;
         userList[socket.userName] = socket.id; //사용자 식별 id 저장
         console.log(`User ${userName} connected`);
     });
 
-    socket.on('message', (data)=>{
+    socket.on('message', (data)=>{        
         console.log(`${socket.userName} : ${data.msg}` );
         const message = `${socket.userName} : ${data.msg}`;
-        if(client[data.receiver] != undefined){
-            socket.to(clientList[data.receiver]).emit('message', message);
+        if(userList[data.receiver] != undefined){
+            socket.to(userList[data.receiver]).emit('message', message);
+        }
+        else{
+            socket.emit('message', message);
         }
     });
 
@@ -41,5 +46,5 @@ io.on("connection", (socket)=>{
 });
 
 server.listen(PORT, ()=>{
-    console.log('listening on : ${PORT}');
+    console.log(`listening on : ${PORT}`);
 })
