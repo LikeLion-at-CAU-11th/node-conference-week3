@@ -14,8 +14,6 @@ const userList = {};
 io.on("connection", (socket)=>{
     //클라이언트가 registerName 이벤트 보내면 호출되는 이벤트 핸들러
     socket.on("registerName", (userName)=>{
-        console.log(1);
-        console.log(userName);
         // 클라이언트가 보낸 이름을 소켓 객체에 저장하고, list에 연결하여 저장
         socket.userName = userName;
         userList[socket.userName] = socket.id; //사용자 식별 id 저장
